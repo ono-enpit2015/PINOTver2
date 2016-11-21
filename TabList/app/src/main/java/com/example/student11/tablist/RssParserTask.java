@@ -229,6 +229,7 @@ public class RssParserTask extends AsyncTask<String, Integer, RssListAdapter> {
                 mAdapter.add(currentItem);*/
                 //System.out.println("見出し：" + title_tmp+"\t"+"リンク："+link_tmp);
             }
+            MainActivity.LoadingFlag = true;
             //MainActivity.PageCount = MainActivity.TitleCount/7 +1;
             System.out.println("見出し数：" + MainActivity.TitleCount);
             System.out.println("ページ数：" + MainActivity.PageCount);

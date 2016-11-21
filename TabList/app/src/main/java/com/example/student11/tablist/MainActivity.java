@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     public static long stop=0;
     public static long diff=0;
     //private ProgressDialog mProgressDialog;
+    public static boolean LoadingFlag;
 
     private static final String RSS_FEED_URL =  "http://www.rssmix.com/u/6589813/rss.xml"; //http://www.rssmix.com/u/6589813/rss.xml or http://mix.chimpfeedr.com/9f2cd-yahoonews
     public static ArrayList<Item> mItems;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        LoadingFlag = false;
         mContext = this;
         PreviousPage = 0;
         start=0;
@@ -326,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
     public static class ListViewFragment extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
         View view;
-        //private ProgressDialog mProgressDialog;
+        public static ProgressDialog mProgressDialog;
 
         public static ListViewFragment newInstance(int sectionNumber) {
             ListViewFragment fragment = new ListViewFragment();
@@ -370,6 +372,14 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             Item item3=new Item("");
             item3.setTitle("blue");
             mItems.add(item3);*/
+
+            while (!LoadingFlag){
+                try {
+                    Thread.sleep(100); //2000ミリ秒Sleepする
+                } catch (InterruptedException e) {
+                    Log.i("A：", "待機できませんでした");
+                }
+            }
 
             mAdapter.clear();
 
@@ -671,6 +681,14 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
                             .show();*/
                     stop = System.currentTimeMillis();
                     diff = diff + stop - start;
+
+                    mProgressDialog = new ProgressDialog(getActivity());
+                    mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    mProgressDialog.setMessage("記事を読み込み中・・・");
+                    mProgressDialog.setCancelable(true);
+                    mProgressDialog.show();
+
+
                     Item item0 = mItems.get(position);
                     TapList.add(String.valueOf(item0.getTitle()));
                     Intent intent = new Intent(getActivity(), ItemDetailActivity.class);
